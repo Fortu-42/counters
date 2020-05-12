@@ -1,13 +1,18 @@
 import React from 'react';
 import SearchBar from '../layout/searchbar';
 import ActionBar from '../layout/actionbar';
+import CountersContainer from '../layout/counterscontainer';
 
 const Counters = (props) => {
+  // const [term, setTerm] = useState('');
   return (
-    <div className='container mx-auto px-2 py-2'>
+    <>
       <SearchBar />
+
+      <CountersContainer />
+
       <ActionBar />
-    </div>
+    </>
   );
 };
 
