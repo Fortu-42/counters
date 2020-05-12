@@ -4,20 +4,29 @@
   "description": "Frontend test for cornershop app",
   "main": "index.js",
   "scripts": {
-    "start": "concurrently \"react-scripts start\" \"node server/index.js\""
+    "start": "concurrently \"react-scripts start\" \"node server/index.js\"",
+    "build:styles": "postcss src/assets/css/tailwind.css -o src/assets/css/App.css",
+    "prebuild": "npm run build:styles",
+    "prestart": "npm run build:styles"
   },
   "author": "Cornershop",
   "license": "ISC",
   "dependencies": {
+    "autoprefixer": "^9.7.6",
+    "axios": "^0.19.2",
     "body-parser": "^1.16.1",
     "concurrently": "^5.1.0",
     "cors": "^2.8.5",
     "express": "^4.14.1",
     "lodash": "^4.17.4",
     "morgan": "^1.9.1",
+    "postcss-cli": "^7.1.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-scripts": "^3.4.1"
+    "react-icons": "^3.10.0",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "^3.4.1",
+    "tailwindcss": "^1.4.6"
   },
   "proxy": "http://localhost:3001",
   "browserslist": {
