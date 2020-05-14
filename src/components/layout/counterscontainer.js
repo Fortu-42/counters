@@ -1,31 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { HTTP } from '../../helpers/http-common';
 import Counter from '../counter';
 import Loader from '../loader';
 import EmptyState from '../emptystate';
 
-const CountersContainer = (props) => {
-  const [counters, setCounters] = useState([]);
-  // eslint-disable-next-line
-  const [error, setError] = useState(null);
-  const [status, setStatus] = useState('idle');
+const CountersContainer = ({ counters, status }) => {
+  // const [error, setError] = useState(null);
 
-  useEffect(() => {
-    setStatus('pending');
-    fetchCounters().then(
-      (countersData) => {
-        setStatus('resolved');
-        setCounters(countersData);
-      },
-      (errorData) => {
-        setStatus('rejected');
-        setError(errorData);
-      },
-    );
-  }, [props]);
-
-  function fetchCounters() {
-    return HTTP.get('counter').then((response) => response.data);
+  function incrementCounter(id) {
+    HTTP.post('counter/inc', { id }).then((response) => {
+      console.log(response);
+    });
   }
 
   function renderCounters() {
@@ -40,7 +25,13 @@ const CountersContainer = (props) => {
         );
       }
       return counters.map((counter) => {
-        return <Counter counter={counter} />;
+        return (
+          <Counter
+            key={counter.id}
+            counter={counter}
+            increment={incrementCounter}
+          />
+        );
       });
     }
 
@@ -53,7 +44,7 @@ const CountersContainer = (props) => {
     }
   }
   return (
-    <div className='py-20 container mx-auto px-2 py-2 h-full'>
+    <div className='py-20 container mx-auto px-3 py-2 h-full'>
       {renderCounters()}
     </div>
   );
