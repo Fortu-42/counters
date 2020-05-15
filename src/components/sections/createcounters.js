@@ -1,19 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { IoIosClose } from 'react-icons/io';
-const CreateCounter = ({
-  handleClickClose,
-  isActive,
-  handleClick,
-  counterName,
-  handleChange,
-  handleSubmit,
-}) => {
-  const hasName = counterName !== '';
+import useCounters from '../../hooks/useCounters';
+
+const CreateCounter = ({ handleClickClose, isActive, handleClick }) => {
+  const [name, setName] = useState('');
+  const hasName = name !== '';
   const error = hasName ? null : 'Por favor ingrese un nombre para el contador';
-  function handleSubmitLocally(event) {
-    event.preventDefault();
-    handleSubmit(event);
-  }
+
   return (
     <div
       className={`fixed top-0 left-0 h-full w-full bg-black bg-opacity-25 flex items-end transform transition-all duration-500 ${
@@ -25,7 +18,7 @@ const CreateCounter = ({
         className={`h-99/100 w-full bg-white rounded-t-lg transform transition-all duration-500 ${
           isActive === true ? 'translate-y-0' : 'translate-y-full'
         }`}>
-        <form onSubmit={handleSubmitLocally}>
+        <form onSubmit={useCounters('save', { name })}>
           <div className='container mx-auto py-4 px-4 border-b border-gray-300'>
             <div className='flex items-center'>
               <button
@@ -56,8 +49,8 @@ const CreateCounter = ({
                 placeholder='Cups of coffee'
                 className='my-2 text-black placeholder-gray-700 px-2 py-2 w-full flex items-center border border-solid border-gray-300 rounded-md focus:border-orange-500 focus:outline-none shadow-inner w-full transition ease-linear duration-200'
                 type='text'
-                value={counterName}
-                onChange={handleChange}
+                value={name}
+                onChange={(event) => setName(event.target.value)}
               />
               <small className='text-gray-700 text-xs'>
                 Give it a name. Creative block? see
