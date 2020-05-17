@@ -5,7 +5,7 @@ import ActionBar from '../layout/actionbar';
 import CountersContainer from '../layout/counterscontainer';
 import CreateCounter from '../sections/createcounters';
 import CreateExamples from '../sections/createexamples';
-
+import Modal from '../modal';
 const Counters = (props) => {
   const [isActive, setIsActive] = useState(false);
   const [isActiveExample, setIsActiveExample] = useState(false);
@@ -37,9 +37,15 @@ const Counters = (props) => {
         handleClickClose={() => {
           setIsActiveExample(false);
         }}
+        handleClickExample={(event) => {
+          setCounterName(event.target.innerText);
+          setIsActiveExample(false);
+        }}
         isActive={isActiveExample}
         setName={setCounterName}
       />
+
+      <Modal />
     </CountersProvider>
   );
 };

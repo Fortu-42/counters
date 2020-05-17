@@ -7,14 +7,49 @@ const CountersDispatchContext = React.createContext();
 function countersReducer(state, action) {
   switch (action.type) {
     case 'pending':
+      if (action.payload === 'refresh') {
+        return {
+          ...state,
+          modal: false,
+          status: 'pending refresh',
+        };
+      }
+      if (action.payload === 'increment') {
+        return {
+          ...state,
+          modal: false,
+          status: 'pending increment',
+        };
+      }
+      if (action.payload === 'decrement') {
+        return {
+          ...state,
+          modal: false,
+          status: 'pending decrement',
+        };
+      }
       return {
         ...state,
+        modal: false,
         status: 'pending',
       };
     case 'error': {
+      if (action.payload.type) {
+        return {
+          ...state,
+          status: `rejected ${action.payload.type}`,
+          modal: true,
+          error: {
+            type: action.payload.type,
+            title: action.payload.title,
+            id: action.payload.id ? action.payload.id : null,
+            count: action.payload.count ? action.payload.count : null,
+          },
+        };
+      }
       return {
         ...state,
-        status: 'error',
+        status: 'rejected',
         error: { ...action.payload },
       };
     }
@@ -22,14 +57,40 @@ function countersReducer(state, action) {
       return {
         ...state,
         status: 'resolved',
-        counters: [...state.counters, ...action.payload],
+        error: null,
+        // modal: false,
+        counters: [...action.payload],
       };
     }
     case 'created': {
       return {
         ...state,
         status: 'resolved',
+        error: null,
+        modal: false,
         counters: [...state.counters, { ...action.payload }],
+      };
+    }
+    case 'incremented': {
+      return {
+        ...state,
+        error: null,
+        modal: false,
+        status: `incremented ${action.payload.id}`,
+      };
+    }
+    case 'decremented': {
+      return {
+        ...state,
+        error: null,
+        modal: false,
+        status: `decremented ${action.payload.id}`,
+      };
+    }
+    case 'close modal': {
+      return {
+        ...state,
+        modal: false,
       };
     }
     default:
@@ -42,6 +103,7 @@ const CountersProvider = ({ children }) => {
     status: 'idle',
     error: null,
     counters: [],
+    modal: false,
   });
   // const { status, counters, error } = state;
 
@@ -72,19 +134,20 @@ function useCountersDispatch() {
 
 function createCounter(dispatch, title) {
   dispatch({ type: 'pending' });
-  HTTP.post('counter', { title })
+  HTTP.post('counterr', { title })
     .then((response) => {
       // console.log(response.data);
 
       dispatch({ type: 'created', payload: response.data });
     })
     .catch((error) => {
-      dispatch({ type: 'error', payload: error.data });
+      dispatch({ type: 'error', payload: { type: 'create', title, ...error.data } });
     });
 }
-function fetchCounters(dispatch) {
-  dispatch({ type: 'pending' });
-  return HTTP.get('counter')
+
+function fetchCounters(dispatch, refresh = false) {
+  dispatch({ type: 'pending', payload: refresh });
+  HTTP.get('counter')
     .then((response) => {
       dispatch({ type: 'fetched', payload: response.data });
     })
@@ -93,10 +156,48 @@ function fetchCounters(dispatch) {
     });
 }
 
+function incrementCounter(dispatch, { id, count, title }) {
+  dispatch({ type: 'pending', payload: 'increment' });
+
+  HTTP.post('counter/inc/', { id })
+    .then((response) => {
+      dispatch({ type: 'incremented', payload: response.data });
+      fetchCounters(dispatch, 'refresh');
+    })
+    .catch((error) => {
+      dispatch({
+        type: 'error',
+        payload: { id, count, title, type: 'increment', ...error.data },
+      });
+    });
+}
+
+function decrementCounter(dispatch, { id, count, title }) {
+  dispatch({ type: 'pending', payload: 'decrement' });
+
+  HTTP.post('counter/dec/', { id })
+    .then((response) => {
+      dispatch({ type: 'decremented', payload: response.data });
+      fetchCounters(dispatch, 'refresh');
+    })
+    .catch((error) => {
+      dispatch({
+        type: 'error',
+        payload: { id, count, title, type: 'decrement', error },
+      });
+    });
+}
+
+// function closeModal(dispatch) {
+//   dispatch({ type: 'close modal' });
+// }
+
 export {
   CountersProvider,
   useCountersState,
   useCountersDispatch,
   createCounter,
   fetchCounters,
+  incrementCounter,
+  decrementCounter,
 };
