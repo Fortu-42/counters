@@ -2,7 +2,7 @@ import React from 'react';
 import { GoSearch } from 'react-icons/go';
 const SearchBar = () => {
   return (
-    <div className='container mx-auto form-control flex items-center w-full fixed top-0 mt-2 px-3'>
+    <div className='bg-white container mx-auto form-control flex items-center w-full fixed top-0 pt-2 px-3'>
       <div className='form-control flex items-center relative w-full'>
         <GoSearch className='absolute left-0 ml-2 text-sm' />
         <input

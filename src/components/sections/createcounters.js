@@ -1,11 +1,34 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { IoIosClose } from 'react-icons/io';
-import useCounters from '../../hooks/useCounters';
+import {
+  useCountersState,
+  useCountersDispatch,
+  createCounter,
+} from '../counterscontext';
+import Loader from '../loader';
 
-const CreateCounter = ({ handleClickClose, isActive, handleClick }) => {
-  const [name, setName] = useState('');
-  const hasName = name !== '';
-  const error = hasName ? null : 'Por favor ingrese un nombre para el contador';
+const CreateCounter = ({
+  handleClickClose,
+  isActive,
+  handleClick,
+  name,
+  setName,
+}) => {
+  const { status, error } = useCountersState();
+  const countersDispatch = useCountersDispatch();
+
+  useEffect(() => {
+    if (status === 'resolved') {
+      setName('');
+      handleClickClose();
+    }
+  }, [status]); // eslint-disable-line
+  // react warning beacuse of useEffect dependencies
+
+  function handleSubmit(event) {
+    event.preventDefault();
+    createCounter(countersDispatch, name);
+  }
 
   return (
     <div
@@ -15,10 +38,10 @@ const CreateCounter = ({ handleClickClose, isActive, handleClick }) => {
           : 'opacity-0 pointer-events-none invisible'
       }`}>
       <div
-        className={`h-99/100 w-full bg-white rounded-t-lg transform transition-all duration-500 ${
+        className={`relative h-99/100 w-full bg-white rounded-t-lg transform transition-all duration-500 ${
           isActive === true ? 'translate-y-0' : 'translate-y-full'
         }`}>
-        <form onSubmit={useCounters('save', { name })}>
+        <form onSubmit={handleSubmit}>
           <div className='container mx-auto py-4 px-4 border-b border-gray-300'>
             <div className='flex items-center'>
               <button
@@ -64,6 +87,14 @@ const CreateCounter = ({ handleClickClose, isActive, handleClick }) => {
             </div>
           </div>
         </form>
+        <div
+          className={`${
+            status === 'pending'
+              ? 'opacity-100 pointer-events-auto visible'
+              : 'opacity-0 pointer-events-none invisible'
+          } h-full w-full bg-opacity-50 bg-white transition-opacity duration-500 ease-in-out absolute top-0 left-0 h-full w-full flex items-center justify-center`}>
+          <Loader />
+        </div>
       </div>
     </div>
   );

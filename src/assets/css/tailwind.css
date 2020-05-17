@@ -12,6 +12,7 @@ html {
   display: flex;
   flex-direction: column;
   align-items: center;
+  @apply py-16;
 }
 
 .switch-wrapper {

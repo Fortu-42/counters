@@ -1,17 +1,22 @@
-import React from 'react';
-import { HTTP } from '../../helpers/http-common';
+import React, { useEffect } from 'react';
+// import MyContext from '../contexProvider';
+import {
+  useCountersState,
+  useCountersDispatch,
+  fetchCounters,
+} from '../counterscontext';
 import Counter from '../counter';
 import Loader from '../loader';
 import EmptyState from '../emptystate';
+import ErrorState from '../errorstate';
 
-const CountersContainer = ({ counters, status }) => {
-  // const [error, setError] = useState(null);
+const CountersContainer = () => {
+  const countersDispatch = useCountersDispatch();
+  const { status, counters } = useCountersState();
 
-  function incrementCounter(id) {
-    HTTP.post('counter/inc', { id }).then((response) => {
-      console.log(response);
-    });
-  }
+  useEffect(() => {
+    fetchCounters(countersDispatch);
+  }, [countersDispatch]);
 
   function renderCounters() {
     // console.log(counters);
@@ -25,13 +30,7 @@ const CountersContainer = ({ counters, status }) => {
         );
       }
       return counters.map((counter) => {
-        return (
-          <Counter
-            key={counter.id}
-            counter={counter}
-            increment={incrementCounter}
-          />
-        );
+        return <Counter key={counter.id} counter={counter} />;
       });
     }
 
@@ -40,13 +39,16 @@ const CountersContainer = ({ counters, status }) => {
     }
 
     if (status === 'rejected') {
-      return <div>OH NO!</div>;
+      return (
+        <ErrorState
+          title="Couldn't load the counters"
+          description='The internet connection appears to be offline.'
+        />
+      );
     }
   }
   return (
-    <div className='py-20 container mx-auto px-3 py-2 h-full'>
-      {renderCounters()}
-    </div>
+    <div className='container mx-auto px-3 min-h-full'>{renderCounters()}</div>
   );
 };
 

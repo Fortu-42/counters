@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { IoIosClose } from 'react-icons/io';
-const CreateCounter = ({ handleClickClose, isActive, handleClickExample }) => {
+const CreateCounterExamples = ({
+  handleClickClose,
+  isActive,
+  handleClickExample,
+}) => {
   const [examples] = useState([
     {
       id: 0,
@@ -145,4 +149,4 @@ const CreateCounter = ({ handleClickClose, isActive, handleClickExample }) => {
   );
 };
 
-export default CreateCounter;
+export default CreateCounterExamples;
