@@ -1,11 +1,6 @@
 import React, { useEffect } from 'react';
 import { IoIosRefresh } from 'react-icons/io';
-// import MyContext from '../contexProvider';
-import {
-  useCountersState,
-  useCountersDispatch,
-  fetchCounters,
-} from '../counterscontext';
+import { useCountersState, useCountersDispatch, fetchCounters } from '../counterscontext';
 import Counter from '../counter';
 import Loader from '../loader';
 import EmptyState from '../emptystate';
@@ -13,17 +8,16 @@ import ErrorState from '../errorstate';
 
 const CountersContainer = () => {
   const countersDispatch = useCountersDispatch();
-  const { status, counters, error } = useCountersState();
+  const { status, counters, counterSelected } = useCountersState();
 
   useEffect(() => {
     fetchCounters(countersDispatch);
   }, [countersDispatch]);
 
-  const countersNumber = counters.length;
-  const timesCountedNumber = counters.reduce(
-    (accumulated, current) => accumulated + current.count,
-    0,
-  );
+  const countersNumber = counterSelected ? '1 Selected' : `${counters.length} items`;
+  const timesCountedNumber = counterSelected
+    ? counterSelected.count
+    : counters.reduce((accumulated, current) => accumulated + current.count, 0);
 
   function renderCountersReady() {
     return counters.map((counter) => {
@@ -55,9 +49,12 @@ const CountersContainer = () => {
     }
     return (
       <>
-        <small className='text-gray-500 text-sm mb-4 flex items-center flex-no-wrap'>
-          <span className='text-black font-semibold mr-2'>
-            {countersNumber} Items
+        <small className='text-gray-500 text-sm mb-4 flex items-center flex-no-wrap block px-2'>
+          <span
+            className={`${
+              counterSelected ? 'text-orange-500 font-semibold' : 'text-black font-normal'
+            } transition duration-500 ease-in-out font-semibold mr-2`}>
+            {countersNumber}
           </span>{' '}
           <span>{timesCountedNumber} Times</span>
           <button

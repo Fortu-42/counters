@@ -11,7 +11,7 @@ import { BsPlus, BsDash } from 'react-icons/bs';
 const Counter = ({ counter: { count, title, id } }) => {
   const [myCount, setMyCount] = useState(count);
   const countersDispatch = useCountersDispatch();
-  const { status } = useCountersState();
+  const { status, counterSelected } = useCountersState();
 
   useEffect(() => {
     if (status === `incremented ${id}`) {
@@ -23,35 +23,42 @@ const Counter = ({ counter: { count, title, id } }) => {
   }, [status]); // eslint-disable-line
   // react warning beacuse of useEffect dependencies
 
+  const isSelected = counterSelected && counterSelected.id === id ? true : false;
+
   return (
-    <div className='flex items-center w-full justify-between mb-6'>
+    <button
+      onFocus={() => countersDispatch({ type: 'select counter', payload: { id, count, title } })}
+      className={`${
+        isSelected ? 'bg-orange-500 bg-opacity-25' : ''
+      } transition duration-500 cursor-pointer ease-in-out flex items-center w-full justify-between px-2 py-3 my-3 focus:outline-none rounded`}>
       <p>{title}</p>
       <div className='flex items-center '>
-        <button
-          onClick={() =>
-            decrementCounter(countersDispatch, { id, count, title })
-          }
+        <a
+          href='#0'
+          onClick={(event) => {
+            event.stopPropagation();
+            decrementCounter(countersDispatch, { id, count, title });
+          }}
           disabled={myCount === 0 ? true : false}
           className={`${
             myCount === 0 ? 'text-gray-500' : 'text-orange-500'
           } mr-3 text-xl font-semibold`}>
           <BsDash />
-        </button>
-        <span
-          className={`${
-            myCount === 0 ? 'text-gray-500' : 'text-black'
-          } font-semibold`}>
+        </a>
+        <span className={`${myCount === 0 ? 'text-gray-500' : 'text-black'} font-semibold`}>
           {myCount}
         </span>
-        <button
-          onClick={() => {
+        <a
+          href='#0'
+          onClick={(event) => {
+            event.stopPropagation();
             incrementCounter(countersDispatch, { id, count, title });
           }}
           className='ml-3 text-xl text-orange-500 font-semibold'>
           <BsPlus />
-        </button>
+        </a>
       </div>
-    </div>
+    </button>
   );
 };
 

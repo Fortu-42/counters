@@ -93,6 +93,42 @@ function countersReducer(state, action) {
         modal: false,
       };
     }
+    case 'select counter': {
+      const {
+        payload: { id, count, title },
+      } = action;
+      return {
+        ...state,
+        counterSelected: {
+          id,
+          count,
+          title,
+        },
+      };
+    }
+    case 'clear selected': {
+      return {
+        ...state,
+        counterSelected: null,
+      };
+    }
+    case 'confirm delete': {
+      return {
+        ...state,
+        status: 'confirm',
+        modal: true,
+      };
+    }
+    case 'deleted': {
+      const newCounters = state.counters.filter(({ id }) => {
+        return id !== action.payload.id;
+      });
+      return {
+        counters: [...newCounters],
+        status: 'resolved',
+        modal: false,
+      };
+    }
     default:
       throw new Error("Don't understand action");
   }
@@ -104,6 +140,7 @@ const CountersProvider = ({ children }) => {
     error: null,
     counters: [],
     modal: false,
+    counterSelected: null,
   });
   // const { status, counters, error } = state;
 
@@ -134,7 +171,7 @@ function useCountersDispatch() {
 
 function createCounter(dispatch, title) {
   dispatch({ type: 'pending' });
-  HTTP.post('counterr', { title })
+  HTTP.post('counter', { title })
     .then((response) => {
       // console.log(response.data);
 
@@ -147,6 +184,7 @@ function createCounter(dispatch, title) {
 
 function fetchCounters(dispatch, refresh = false) {
   dispatch({ type: 'pending', payload: refresh });
+  // dispatch({ type: 'clear selected' });
   HTTP.get('counter')
     .then((response) => {
       dispatch({ type: 'fetched', payload: response.data });
@@ -188,6 +226,23 @@ function decrementCounter(dispatch, { id, count, title }) {
     });
 }
 
+function deleteCounter(dispatch, { id, title }) {
+  dispatch({ type: 'pending' });
+  HTTP.delete('counter', {
+    headers: {
+      'X-Requested-With': 'XMLHttpRequest',
+      'Content-Type': 'multipart/form-data',
+    },
+    data: { id, _method: 'DELETE' },
+  })
+    .then(() => {
+      dispatch({ type: 'deleted', payload: { id } });
+    })
+    .catch((error) => {
+      dispatch({ type: 'error', payload: { id, title, type: 'delete', ...error.data } });
+    });
+}
+
 // function closeModal(dispatch) {
 //   dispatch({ type: 'close modal' });
 // }
@@ -200,4 +255,5 @@ export {
   fetchCounters,
   incrementCounter,
   decrementCounter,
+  deleteCounter,
 };
