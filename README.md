@@ -5,7 +5,9 @@ Aplicación hecha con React para mostrar contadores de cualquier cosa. Tiene las
 Cabe destacar que el manejo del estado de la aplicación es manejado a través de los "Hooks" de react "useContext" y "useReducer",
 para hacer dispatch de acciones "asíncronas o síncronas", a través, en algunos casos de el hook "useEffect" o de eventos del DOM
 
-vea: './src/components/counterscontext.js'
+[vea counterscontex]: ./src/components/counterscontext.js
+
+donde está el reducer de la aplicación junto con las acciones asíncronas conrespondientes al contexto
 
 - Crear Contadores (a partir de ejemplos también),
 - Aumentar un contador
