@@ -130,6 +130,27 @@ function countersReducer(state, action) {
         modal: false,
       };
     }
+    case 'filter': {
+      const newCounters = state.counters.filter((counter) => {
+        return (
+          counter.title.includes(`${action.payload.term}`) ||
+          counter.title.includes(`${action.payload.term.toLowerCase()}`) ||
+          counter.title.includes(`${action.payload.term.toUpperCase()}`)
+        );
+      });
+      return {
+        ...state,
+        status: 'filter',
+        filtered: [...newCounters],
+      };
+    }
+    case 'blur filter': {
+      return {
+        ...state,
+        status: 'idle',
+        filtered: [],
+      };
+    }
     default:
       throw new Error("Don't understand action");
   }
@@ -140,6 +161,7 @@ const CountersProvider = ({ children }) => {
     status: 'idle',
     error: null,
     counters: [],
+    filtered: [],
     modal: false,
     counterSelected: null,
   });

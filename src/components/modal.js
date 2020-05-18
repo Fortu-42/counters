@@ -14,7 +14,7 @@ const Modal = () => {
   //  ERROR MODALS VARIABLES
   const errorType = error && error.type ? error.type : null;
   const errorTitle = error && error.title ? error.title : null;
-  const errorCount = error && error.count ? error.count : null;
+  // const errorCount = error && error.count ? error.count : null;
   const errorId = error && error.id ? error.id : null;
 
   function handleClickRetry() {

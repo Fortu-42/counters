@@ -8,18 +8,25 @@ import ErrorState from '../errorstate';
 
 const CountersContainer = () => {
   const countersDispatch = useCountersDispatch();
-  const { status, counters, counterSelected } = useCountersState();
+  const { status, counters, counterSelected, filtered } = useCountersState();
 
   useEffect(() => {
     fetchCounters(countersDispatch);
   }, [countersDispatch]);
 
-  const countersNumber = counterSelected ? '1 Selected' : `${counters.length} items`;
-  const timesCountedNumber = counterSelected
-    ? counterSelected.count
-    : counters.reduce((accumulated, current) => accumulated + current.count, 0);
+  const countersNumber = counterSelected
+    ? '1 Selected'
+    : status === 'filter'
+    ? `${filtered.length} items`
+    : `${counters.length} items`;
+  function timesCountedNumber(arrayToReduce) {
+    if (counterSelected) {
+      return counterSelected.count;
+    }
+    return arrayToReduce.reduce((accumulated, current) => accumulated + current.count, 0);
+  }
 
-  function renderCountersReady() {
+  function renderCountersReady(counters) {
     return counters.map((counter) => {
       return <Counter key={counter.id} counter={counter} />;
     });
@@ -39,6 +46,31 @@ const CountersContainer = () => {
       );
     }
 
+    if (status === 'filter') {
+      return (
+        <>
+          <small className='text-gray-500 text-sm mb-4 flex items-center flex-no-wrap block px-2'>
+            <span
+              className={`${
+                counterSelected ? 'text-orange-500 font-semibold' : 'text-black font-normal'
+              } transition duration-500 ease-in-out font-semibold mr-2`}>
+              {countersNumber}
+            </span>{' '}
+            <span>{timesCountedNumber(filtered)} Times</span>
+            <button
+              onClick={() => fetchCounters(countersDispatch, 'refresh')}
+              className={`${
+                status === 'pending refresh' ? 'text-orange-500' : 'text-black'
+              } text-sm ml-2 flex items-center flex-no-wrap focus:outline-0`}>
+              <IoIosRefresh className='mr-1' />
+              {status === 'pending refresh' ? 'Refreshing...' : ''}
+            </button>
+          </small>
+          <div>{renderCountersReady(filtered)}</div>
+        </>
+      );
+    }
+
     if (counters.length === 0) {
       return (
         <EmptyState
@@ -47,6 +79,7 @@ const CountersContainer = () => {
         />
       );
     }
+
     return (
       <>
         <small className='text-gray-500 text-sm mb-4 flex items-center flex-no-wrap block px-2'>
@@ -56,7 +89,7 @@ const CountersContainer = () => {
             } transition duration-500 ease-in-out font-semibold mr-2`}>
             {countersNumber}
           </span>{' '}
-          <span>{timesCountedNumber} Times</span>
+          <span>{timesCountedNumber(counters)} Times</span>
           <button
             onClick={() => fetchCounters(countersDispatch, 'refresh')}
             className={`${
@@ -66,7 +99,7 @@ const CountersContainer = () => {
             {status === 'pending refresh' ? 'Refreshing...' : ''}
           </button>
         </small>
-        <div>{renderCountersReady()}</div>
+        <div>{renderCountersReady(counters)}</div>
       </>
     );
   }

@@ -7,6 +7,8 @@ const ActionBar = ({ handleClick }) => {
   const countersDispatch = useCountersDispatch();
   const [tooltipVisible, setTooltipVisible] = useState(false);
   function toggleVisible() {
+    console.log('toggle');
+
     setTooltipVisible(!tooltipVisible);
   }
   function hideTooltip() {
@@ -48,7 +50,7 @@ const ActionBar = ({ handleClick }) => {
         {renderActions()}
         <button
           onClick={handleClick}
-          className='bg-orange-500 ml-auto shadow-md px-4 py-1 text-white text-xl rounded-md'>
+          className='bg-orange-500 ml-auto shadow-md px-4 py-2 text-white text-lg rounded-md'>
           <BsPlus />
         </button>
       </div>
