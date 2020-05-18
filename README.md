@@ -1,3 +1,35 @@
+## Breve introducción a la aplicación
+
+Aplicación hecha con React para mostrar contadores de cualquier cosa. Tiene las siguientes funcionalidades:
+
+- Crear Contadores (a partir de ejemplos también),
+- Aumentar un contador
+- Disminuir un contador
+- Eliminar Contadores
+- Copiar el contenido de un contador
+- Filtar contadores por palabras
+- Refrescar la lista de contadores
+
+## Listado de las tecnologías o frameworks utilizados
+
+- axios: para hacer fetch al servidor
+- react-copy-to-clipboard: para hacer funcionalidad de copiar al hacer click
+- react-icons: para los iconos indicadores en el paginador
+- react-router-dom: para la navegación entre componentes en la aplicación
+- react-outside-click-handler: para manejar el evento de cierre del tooltip de copiado
+- #### tailwind: como librería de clases de utilidad de css o UI
+- purge-css: incorporado en la librería tailwind para eliminar estilos no utilizadons en producción
+
+## Cómo instalar las dependencias y correr el proyecto
+
+### Debes tener Node y npm instalado https://nodejs.org/es/
+
+#### `npm install`
+
+#### `npm run start`
+
+![Cheers](goodbye.gif)
+
 # Cornershop Frontend Test
 
 #### ⚠️ Before you begin
@@ -24,7 +56,7 @@ Your submission will be evaluated considering the following criterias:
   - Extra points for writing custom styling code for UI elements.
   - Use whatever CSS flavor you want: plane old CSS, SASS, LESS, CSS-in-JS, CSS modules, everything is allowed.
 - Good architecture and software design.
-  - _Hint:_ Usage of design patterns, good code organization, separation of concerns, etc. 
+  - _Hint:_ Usage of design patterns, good code organization, separation of concerns, etc.
 - Use of best practices when writing code.
   - _Hint:_ Idiomatic & readable code, good use of composition, DRY, etc.
 - The application must persist data back to the server.
@@ -64,9 +96,10 @@ Since the backend API runs locally on a different port (`3001`) than the `react-
 #### **GET** `/api/v1/counter`.
 
 _Fetch a list of counters._
+
 ```javascript
 /* Response */
-[]
+[];
 ```
 
 #### **POST** `/api/v1/counter`.
@@ -82,7 +115,9 @@ _Adds a counter._
 ```
 
 #### **POST** `/api/v1/counter/inc`
+
 _Increments the value of a counter._
+
 ```javascript
 /* Body */
 { id: "asdf" }
@@ -92,6 +127,7 @@ _Increments the value of a counter._
 ```
 
 #### **POST** `/api/v1/counter/dec`
+
 _Decrements the value of a counter._
 
 ```javascript
@@ -103,15 +139,19 @@ _Decrements the value of a counter._
 ```
 
 #### **DELETE** `/api/v1/counter`
+
 _Deletes a counter._
 
 ```javascript
 /* Body */
-{ id: "qwer" }
+{
+  id: 'qwer';
+}
 
 /* Response */
-"qwer" // The id of the deleted counter
+('qwer'); // The id of the deleted counter
 ```
+
 ---
 
 Good luck! 🎉
