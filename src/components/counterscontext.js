@@ -126,6 +126,7 @@ function countersReducer(state, action) {
       return {
         counters: [...newCounters],
         status: 'resolved',
+        error: null,
         modal: false,
       };
     }
@@ -184,7 +185,11 @@ function createCounter(dispatch, title) {
 
 function fetchCounters(dispatch, refresh = false) {
   dispatch({ type: 'pending', payload: refresh });
-  // dispatch({ type: 'clear selected' });
+
+  if (Boolean(refresh) === true) {
+    dispatch({ type: 'clear selected' });
+  }
+
   HTTP.get('counter')
     .then((response) => {
       dispatch({ type: 'fetched', payload: response.data });
@@ -227,16 +232,15 @@ function decrementCounter(dispatch, { id, count, title }) {
 }
 
 function deleteCounter(dispatch, { id, title }) {
-  dispatch({ type: 'pending' });
-  HTTP.delete('counter', {
+  dispatch({ type: 'pending', payload: 'refresh' });
+  HTTP.delete('counteer', {
     headers: {
       'X-Requested-With': 'XMLHttpRequest',
-      'Content-Type': 'multipart/form-data',
     },
-    data: { id, _method: 'DELETE' },
+    data: { id },
   })
     .then(() => {
-      dispatch({ type: 'deleted', payload: { id } });
+      dispatch({ type: 'deleted', payload: { id, title } });
     })
     .catch((error) => {
       dispatch({ type: 'error', payload: { id, title, type: 'delete', ...error.data } });

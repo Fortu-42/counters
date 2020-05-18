@@ -1,9 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BsPlus, BsTrash, BsBoxArrowUp } from 'react-icons/bs';
 import { useCountersState, useCountersDispatch } from '../counterscontext';
+import Tooltip from '../tooltip';
 const ActionBar = ({ handleClick }) => {
   const { counterSelected } = useCountersState();
   const countersDispatch = useCountersDispatch();
+  const [tooltipVisible, setTooltipVisible] = useState(false);
+  function toggleVisible() {
+    setTooltipVisible(!tooltipVisible);
+  }
+  function hideTooltip() {
+    setTooltipVisible(false);
+  }
   function renderActions() {
     return (
       <div
@@ -17,7 +25,18 @@ const ActionBar = ({ handleClick }) => {
           className='py-2 px-4 shadow-md border-gray-300 border border-solid rounded-md text-red-600 mr-2'>
           <BsTrash />
         </button>
-        <button className='py-2 px-4 shadow-md border-gray-300 border border-solid rounded-md text-black font-semibold'>
+        <button
+          onClick={toggleVisible}
+          className='relative flex items-center justify-center py-2 px-4 shadow-md border-gray-300 border border-solid rounded-md text-black font-semibold focus:outline-none'>
+          <div className='absolute -top-24'>
+            {counterSelected ? (
+              <Tooltip
+                tooltipVisible={tooltipVisible}
+                hideTooltip={hideTooltip}
+                counter={counterSelected}
+              />
+            ) : null}
+          </div>
           <BsBoxArrowUp />
         </button>
       </div>

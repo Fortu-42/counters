@@ -17,13 +17,16 @@ const Modal = () => {
   const errorCount = error && error.count ? error.count : null;
   const errorId = error && error.id ? error.id : null;
 
-  function handleRetryClick() {
+  function handleClickRetry() {
     const { id, count, title } = error;
     if (errorType === 'increment') {
       incrementCounter(countersDispacth, { id, count, title });
     }
     if (errorType === 'decrement') {
       decrementCounter(countersDispacth, { id, count, title });
+    }
+    if (errorType === 'delete') {
+      deleteCounter(countersDispacth, { id, title });
     }
   }
 
@@ -43,27 +46,31 @@ const Modal = () => {
 
   function renderContent() {
     if (status.includes('rejected')) {
-      if (errorTitle && errorType && errorCount && errorId) {
+      if (errorType && errorId) {
         return (
           <>
-            <h1 className='text-lg text-center font-semibold mb-2'>
-              Couldn't update "{errorTitle}" to {countToDisplay()}
-            </h1>
-            <p className='text-center font-light mb-4'>
-              The internet connection appears to be offline
-            </p>
-            <div className='flex items-center'>
-              <button
-                onClick={handleRetryClick}
-                className='font-semibold text-sm text-white bg-orange-500 shadow-md rounded px-4 py-2 border-none mr-4'>
-                Retry
-              </button>
-              <button
-                onClick={handleClickDismiss}
-                className='font-semibold text-sm text-orange-500 bg-white shadow-md rounded px-4 py-2 border-none'>
-                Dismiss
-              </button>
-            </div>
+            {errorType === 'increment' || errorType === 'decrement' ? (
+              <>
+                <h1 className='text-lg text-center font-semibold mb-2'>
+                  Couldn't update "{errorTitle}" to {countToDisplay()}
+                </h1>
+                <p className='text-center font-light mb-4'>
+                  The internet connection appears to be offline
+                </p>
+                <div className='flex items-center'>
+                  <button
+                    onClick={handleClickRetry}
+                    className='font-semibold text-sm text-white bg-orange-500 shadow-md rounded px-4 py-2 border-none mr-4'>
+                    Retry
+                  </button>
+                  <button
+                    onClick={handleClickDismiss}
+                    className='font-semibold text-sm text-orange-500 bg-white shadow-md rounded px-4 py-2 border-none'>
+                    Dismiss
+                  </button>
+                </div>
+              </>
+            ) : null}
           </>
         );
       }
@@ -79,6 +86,30 @@ const Modal = () => {
               className='font-semibold text-sm text-white bg-orange-500 shadow-md rounded px-4 py-2 border-none'>
               Dismiss
             </button>
+          </>
+        );
+      }
+      if (errorType === 'delete') {
+        return (
+          <>
+            <h1 className='text-lg text-center font-semibold mb-2'>
+              Couldn't delete "{errorTitle}"
+            </h1>
+            <p className='text-center font-light mb-4'>
+              The internet connection appears to be offline
+            </p>
+            <div className='flex items-center'>
+              <button
+                onClick={handleClickRetry}
+                className='font-semibold text-sm text-white bg-orange-500 shadow-md rounded px-4 py-2 border-none mr-4'>
+                Retry
+              </button>
+              <button
+                onClick={handleClickDismiss}
+                className='font-semibold text-sm text-orange-500 bg-white shadow-md rounded px-4 py-2 border-none'>
+                Dismiss
+              </button>
+            </div>
           </>
         );
       }
@@ -99,7 +130,8 @@ const Modal = () => {
             </button>
             <button
               onClick={() => {
-                deleteCounter(countersDispacth, { id: counterSelected.id });
+                const { id, title } = counterSelected;
+                deleteCounter(countersDispacth, { id, title });
               }}
               className='font-semibold text-sm text-red-600 bg-white shadow-md rounded px-4 py-2 border-none'>
               Delete
