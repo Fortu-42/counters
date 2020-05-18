@@ -23,7 +23,7 @@ Tiene las siguientes funcionalidades:
 
 - axios: para hacer fetch al servidor
 - react-copy-to-clipboard: para hacer funcionalidad de copiar al hacer click
-- react-icons: para los iconos indicadores en el paginador
+- react-icons: para los iconos de la app
 - react-router-dom: para la navegación entre componentes en la aplicación
 - react-outside-click-handler: para manejar el evento de cierre del tooltip de copiado
 - #### tailwind: como librería de clases de utilidad de css o UI
