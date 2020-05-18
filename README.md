@@ -1,13 +1,15 @@
 ## Breve introducción a la aplicación
 
-Aplicación hecha con React para mostrar contadores de cualquier cosa. Tiene las siguientes funcionalidades:
+Aplicación hecha con React para mostrar contadores de cualquier cosa. :
 
 Cabe destacar que el manejo del estado de la aplicación es manejado a través de los "Hooks" de react "useContext" y "useReducer",
 para hacer dispatch de acciones "asíncronas o síncronas", a través, en algunos casos de el hook "useEffect" o de eventos del DOM
 
-[vea counterscontex]: ./src/components/counterscontext.js
+[vea counterscontex](https://github.com/Fortu-42/counters/blob/master/src/components/counterscontext.js)
 
 donde está el reducer de la aplicación junto con las acciones asíncronas conrespondientes al contexto
+
+Tiene las siguientes funcionalidades:
 
 - Crear Contadores (a partir de ejemplos también),
 - Aumentar un contador
