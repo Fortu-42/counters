@@ -187,17 +187,35 @@ function useCountersState() {
 function useCountersDispatch() {
   const context = React.useContext(CountersDispatchContext);
   if (context === undefined) {
-    throw new Error('useCountDispatch must be used within a CountProvider');
+    throw new Error('useCountDispatch must be used within a CountersProvider');
   }
   return context;
 }
 
-function createCounter(dispatch, title) {
+function createCounter(dispatch, title, test = null) {
+  // console.log(dispatch);
+
+  if (test && test.url && test.title) {
+    dispatch({ type: 'pending' });
+    return new Promise((resolve, reject) => {
+      HTTP.post('counter', { title: test.title })
+        .then((response) => {
+          // console.log(response.data);
+          dispatch({ type: 'created', payload: response.data });
+          resolve();
+        })
+        .catch((error) => {
+          dispatch({ type: 'error', payload: { type: 'create', title, ...error.data } });
+          reject();
+        });
+    });
+  }
+
   dispatch({ type: 'pending' });
+
   HTTP.post('counter', { title })
     .then((response) => {
       // console.log(response.data);
-
       dispatch({ type: 'created', payload: response.data });
     })
     .catch((error) => {
@@ -205,11 +223,25 @@ function createCounter(dispatch, title) {
     });
 }
 
-function fetchCounters(dispatch, refresh = false) {
+function fetchCounters(dispatch, refresh = false, test = null) {
   dispatch({ type: 'pending', payload: refresh });
 
   if (Boolean(refresh) === true) {
     dispatch({ type: 'clear selected' });
+  }
+
+  if (test && test.url) {
+    return new Promise((resolve, reject) => {
+      HTTP.get(test.url)
+        .then((response) => {
+          dispatch({ type: 'fetched', payload: response.data });
+          resolve();
+        })
+        .catch((error) => {
+          dispatch({ type: 'error', payload: error.data });
+          reject();
+        });
+    });
   }
 
   HTTP.get('counter')
