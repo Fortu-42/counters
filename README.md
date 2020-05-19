@@ -37,6 +37,8 @@ Tiene las siguientes funcionalidades:
 
 #### `npm run start`
 
+#### `npm run test`
+
 ![Cheers](goodbye.gif)
 
 # Cornershop Frontend Test

@@ -195,21 +195,21 @@ function useCountersDispatch() {
 function createCounter(dispatch, title, test = null) {
   // console.log(dispatch);
 
-  if (test && test.url && test.title) {
-    dispatch({ type: 'pending' });
-    return new Promise((resolve, reject) => {
-      HTTP.post('counter', { title: test.title })
-        .then((response) => {
-          // console.log(response.data);
-          dispatch({ type: 'created', payload: response.data });
-          resolve();
-        })
-        .catch((error) => {
-          dispatch({ type: 'error', payload: { type: 'create', title, ...error.data } });
-          reject();
-        });
-    });
-  }
+  // if (test && test.url && test.title) {
+  //   dispatch({ type: 'pending' });
+  //   return new Promise((resolve, reject) => {
+  //     HTTP.post('counter', { title: test.title })
+  //       .then((response) => {
+  //         // console.log(response.data);
+  //         dispatch({ type: 'created', payload: response.data });
+  //         resolve();
+  //       })
+  //       .catch((error) => {
+  //         dispatch({ type: 'error', payload: { type: 'create', title, ...error.data } });
+  //         reject();
+  //       });
+  //   });
+  // }
 
   dispatch({ type: 'pending' });
 

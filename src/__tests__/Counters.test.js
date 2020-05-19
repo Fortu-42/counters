@@ -1,12 +1,8 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import { waitFor } from '@testing-library/dom';
 import { renderHook } from '@testing-library/react-hooks';
-import { createCounter, useCountersState, CountersProvider } from '../components/counterscontext';
-import CountersContainer from '../components/layout/counterscontainer';
-import { act } from 'react-dom/test-utils';
+import { useCountersState, CountersProvider } from '../components/counterscontext';
 
-test('counter is correctly created', async () => {
+test('default props are correct', async () => {
   const wrapper = ({ children }) => <CountersProvider>{children}</CountersProvider>;
   const { result } = renderHook(() => useCountersState(), { wrapper });
 
